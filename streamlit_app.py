@@ -30,15 +30,22 @@ streamlit.dataframe(fruits_to_show)
 
   #nEW SECTION FOR FRUITYVICE API RESPONSE
 streamlit.header('Fruityvice Fruit Advice!')
-  #Text input for getting the user's fruit info
-fruit_choice = streamlit.text_input('What fruit would you like information about?','Kiwi')
-streamlit.write('The user entered ', fruit_choice)
-    #import requests
-fruityvice_response = requests.get("https://fruityvice.com/api/fruit/" + fruit_choice)
-  # Normalize the api calls response 
-fruityvice_normalized = pandas.json_normalize(fruityvice_response.json())
-  # Turn/display as the response into a dataframe
-streamlit.dataframe(fruityvice_normalized)
+try:
+    #Text input for getting the user's fruit info
+  fruit_choice = streamlit.text_input('What fruit would you like information about?')
+  if not fruit_choice: 
+    streamlit.error("Please select a fruit to get information.")
+      #import requests
+  else:
+    fruityvice_response = requests.get("https://fruityvice.com/api/fruit/" + fruit_choice)
+      # Normalize the api calls response 
+    fruityvice_normalized = pandas.json_normalize(fruityvice_response.json())
+      # Turn/display as the response into a dataframe
+    streamlit.dataframe(fruityvice_normalized)
+
+except URLError as e:
+  streamlit.error()
+
 
 streamlit.stop
 
